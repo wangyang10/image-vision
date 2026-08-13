@@ -9,6 +9,12 @@
     "assets"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wangyang10/image-vision.git",
+    "directory": "dsh-image-vision"
+  },
+  "homepage": "https://github.com/wangyang10/image-vision/tree/main/dsh-image-vision",
   "keywords": [
     "dsh",
     "deepseek-harness",
