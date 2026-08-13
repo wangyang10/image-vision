@@ -39,10 +39,10 @@ python3 scripts/vision_query.py chart.png --prompt "输出：标题、图表类�
 脚本按以下优先级读取配置：
 
 1. 环境变量 `VISION_API_KEY` / `VISION_API_BASE` / `VISION_MODEL`
-2. 本机配置文件 `~/.codex/image-vision.env`（`KEY=值` 形式，每行一个）
+2. 本机配置文件 `~/.dsh/image-vision.env`（DSH 优先），不存在时回退到 `~/.codex/image-vision.env`（`KEY=值` 形式，每行一个）
 3. 脚本内置默认值（OpenRouter + `qwen/qwen3-vl-32b-instruct`）
 
-本机当前配置在 `~/.codex/image-vision.env`：
+本机当前配置在 `~/.codex/image-vision.env`（DSH 下可复制为 `~/.dsh/image-vision.env`）：
 
 ```bash
 VISION_API_KEY=<你的密钥>              # 已写入该文件，权限 600

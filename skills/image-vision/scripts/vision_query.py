@@ -25,8 +25,8 @@ Environment variables:
   VISION_MODEL     Model name, e.g. gpt-4o-mini (the default)
 
 If the environment variables are not set, the script reads them from
-~/.codex/image-vision.env (KEY=BASE=MODEL= lines). Values in the
-environment always take precedence.
+~/.dsh/image-vision.env, falling back to ~/.codex/image-vision.env
+(KEY=BASE=MODEL= lines). Values in the environment always take precedence.
 """
 
 import argparse
@@ -43,7 +43,11 @@ import urllib.request
 DEFAULT_BASE = "https://openrouter.ai/api/v1"
 DEFAULT_MODEL = "qwen/qwen3-vl-32b-instruct"
 DEFAULT_PROMPT = "Describe this image in detail."
-CONFIG_PATH = os.path.expanduser("~/.codex/image-vision.env")
+# Config file lookup order: DSH first (~/.dsh), then Codex (~/.codex).
+CONFIG_PATHS = [
+    os.path.expanduser("~/.dsh/image-vision.env"),
+    os.path.expanduser("~/.codex/image-vision.env"),
+]
 
 _IMAGE_MAGIC = (
     (b"\x89PNG\r\n\x1a\n", "image/png"),
@@ -185,10 +189,15 @@ def build_prompt(prompt: str, as_json: bool) -> str:
 
 
 def load_config() -> None:
-    """Load VISION_* defaults from ~/.codex/image-vision.env if present."""
-    if not os.path.exists(CONFIG_PATH):
-        return
-    with open(CONFIG_PATH, encoding="utf-8") as f:
+    """Load VISION_* defaults from ~/.dsh/image-vision.env or ~/.codex/image-vision.env."""
+    for path in CONFIG_PATHS:
+        if os.path.exists(path):
+            _load_env_file(path)
+            return
+
+
+def _load_env_file(path: str) -> None:
+    with open(path, encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line or line.startswith("#") or "=" not in line:

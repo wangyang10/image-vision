@@ -1,0 +1,24 @@
+{
+  "name": "dsh-image-vision",
+  "version": "0.1.0",
+  "description": "DeepSeek Harness plugin: gives text-only models (e.g. DeepSeek) image-reading ability via any OpenAI-compatible vision API. Registers the vision_query tool, DSH credentials integration, and the image-vision skill.",
+  "type": "module",
+  "main": "lib/index.js",
+  "files": [
+    "lib",
+    "assets"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "cordis",
+    "vision",
+    "image",
+    "ocr",
+    "skill"
+  ],
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1"
+  }
+}
