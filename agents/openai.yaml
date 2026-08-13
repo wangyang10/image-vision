@@ -1,0 +1,4 @@
+interface:
+  display_name: "识图 API (Image Vision)"
+  short_description: "当前模型无法读图时，调用外部视觉模型 API 识别图片内容。"
+  default_prompt: "使用 $image-vision 帮我识别这张图片的内容。"
