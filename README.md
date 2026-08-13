@@ -17,11 +17,46 @@ by calling any OpenAI-compatible vision API.
 
 ## 安装
 
+技能本体位于仓库的 `skills/image-vision/` 目录，是 Codex 和 Claude Code
+都支持的标准 skills 目录结构。
+
+### 方式一：让 Codex 自动安装（推荐）
+
+把技能地址发给 Codex，说：
+
+> 请安装这个技能：https://github.com/wangyang10/image-vision/tree/main/skills/image-vision
+
+Codex 会自动下载并安装到 `~/.codex/skills/image-vision`，重启 Codex 后生效。
+
+### 方式二：让 Claude Code 自动安装
+
+把仓库地址发给 Claude Code，说：
+
+> 从 https://github.com/wangyang10/image-vision 安装 image-vision 技能到
+> `~/.claude/skills/` 目录
+
+### 方式三：一键安装脚本
+
 ```bash
-git clone https://github.com/<你的GitHub用户名>/<仓库名>.git ~/.codex/skills/image-vision
+bash <(curl -fsSL https://raw.githubusercontent.com/wangyang10/image-vision/main/install.sh)
 ```
 
-或手动把 `image-vision` 文件夹放入 `~/.codex/skills/`，重启 Codex 后自动发现。
+默认同时安装到 Codex 和 Claude Code；只装其中一个：
+
+```bash
+TARGET=codex  bash <(curl -fsSL https://raw.githubusercontent.com/wangyang10/image-vision/main/install.sh)
+TARGET=claude bash <(curl -fsSL https://raw.githubusercontent.com/wangyang10/image-vision/main/install.sh)
+```
+
+### 方式四：手动安装
+
+```bash
+git clone https://github.com/wangyang10/image-vision.git
+cp -r image-vision/skills/image-vision ~/.codex/skills/    # Codex
+cp -r image-vision/skills/image-vision ~/.claude/skills/   # Claude Code
+```
+
+安装后重启 Codex / Claude Code 即可自动发现该技能。
 
 ## 配置
 
@@ -34,7 +69,7 @@ VISION_MODEL=qwen/qwen3-vl-32b-instruct
 ```
 
 其他平台（SiliconFlow / 智谱 / Kimi / 通义千问 / 本地 Ollama）示例见
-[references/providers.md](references/providers.md)。
+[references/providers.md](skills/image-vision/references/providers.md)。
 
 > ⚠️ `~/.codex/image-vision.env` 包含你的密钥，永远不要提交到任何仓库。
 
@@ -43,9 +78,9 @@ VISION_MODEL=qwen/qwen3-vl-32b-instruct
 在 Codex 中直接发送图片并提问即可自动触发；也可手动调用：
 
 ```bash
-python3 scripts/vision_query.py 图片.png --prompt "这张图里写了什么？"
-python3 scripts/vision_query.py a.png b.png --prompt "两张图有什么区别？"
-python3 scripts/vision_query.py 截图.png --prompt "完整提取图中文字" --json
+python3 ~/.codex/skills/image-vision/scripts/vision_query.py 图片.png --prompt "这张图里写了什么？"
+python3 ~/.codex/skills/image-vision/scripts/vision_query.py a.png b.png --prompt "两张图有什么区别？"
+python3 ~/.codex/skills/image-vision/scripts/vision_query.py 截图.png --prompt "完整提取图中文字" --json
 ```
 
 ## License
