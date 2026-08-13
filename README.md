@@ -13,7 +13,7 @@ OpenAI 兼容的识图模型 API（OpenRouter、SiliconFlow、智谱、Kimi、�
 |---|---|---|---|---|
 | **Codex** | 标准 skill（`skills/image-vision/`） | 自动安装 / 一键脚本 `TARGET=codex` | 发图提问自动触发；或手动跑 python 脚本 | python3 + sips（macOS） |
 | **Claude Code** | 标准 skill | 自动安装 / 一键脚本 `TARGET=claude` | 同上 | python3 + sips（macOS） |
-| **DeepSeek Harness (DSH)** | 插件（`dsh-image-vision/`，推荐） | 符号链接 + patch 条目 / npm 发布 | 模型直接调 `vision_query` 工具；输入框 `/image-vision` | 无（纯 Node 内置模块） |
+| **DeepSeek Harness (DSH)** | 插件（`dsh-image-vision/`，推荐） | npm 一条命令 / 符号链接 + patch 条目 | 模型直接调 `vision_query` 工具；输入框 `/image-vision` | 无（纯 Node 内置模块） |
 | **DeepSeek Harness (DSH)** | 标准 skill（轻量方案） | 一键脚本 `TARGET=dsh` | 发图提问触发技能，模型跑 python 脚本 | python3 + sips（macOS） |
 | 其他支持 SKILL.md 的宿主 | 标准 skill | 复制到对应技能目录 | 依宿主而定 | python3 |
 
@@ -112,8 +112,11 @@ ln -s <本仓库>/dsh-image-vision ~/.dsh/profiles/web/node_modules/dsh-image-vi
 #         maxBytes: 10485760
 ```
 
+已发布到 npm：[`dsh-image-vision`](https://www.npmjs.com/package/dsh-image-vision)
+（`npm i dsh-image-vision` / `dsh plugin --profile web add dsh-image-vision`），
+也可在任意 profile 的 `package.json` 声明依赖并加入 `dsh.profile.bundles`。
+
 重启 `dsh web` 后生效（profile patch 层热加载依赖 HMR，web profile 默认禁用）。
-发布到 npm 后也可在任意 profile 的 `package.json` 声明依赖并加入 `dsh.profile.bundles`。
 
 **使用**：直接发图提问（模型自动调 `vision_query`）；或在聊天输入框输入 `/image-vision` 唤起技能。
 

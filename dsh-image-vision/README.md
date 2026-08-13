@@ -23,7 +23,7 @@ Codex/Claude Code 技能共用同一套 API 与配置语义。
 
 ## 安装（当前 profile）
 
-无需 npm publish，本地装载即可：
+本地装载（开发用，无需 npm 发布）：
 
 ```bash
 # 1. 让 profile 的 node_modules 能看到插件（符号链接即可，插件零运行时依赖）
@@ -43,9 +43,10 @@ ln -s <本目录> ~/.dsh/profiles/web/node_modules/dsh-image-vision
 
 ## 发布安装（任意 profile）
 
+已发布到 npm：[`dsh-image-vision`](https://www.npmjs.com/package/dsh-image-vision)（`npm i dsh-image-vision`）。
+
 ```bash
-npm publish
-# 然后安装到目标 profile（web 示例）：
+# 安装到目标 profile（web 示例）：
 dsh plugin --profile web add dsh-image-vision    # 转发给 pnpm 安装依赖
 # 并把 "dsh-image-vision" 加入该 profile package.json 的 dsh.profile.bundles：
 #   "dsh": { "profile": { "bundles": ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "dsh-image-vision"] } }
