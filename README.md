@@ -13,7 +13,7 @@ OpenAI 兼容的识图模型 API（OpenRouter、SiliconFlow、智谱、Kimi、�
 |---|---|---|---|---|
 | **Codex** | 标准 skill（`skills/image-vision/`） | 自动安装 / 一键脚本 `TARGET=codex` | 发图提问自动触发；或手动跑 python 脚本 | python3 + sips（macOS） |
 | **Claude Code** | 标准 skill | 自动安装 / 一键脚本 `TARGET=claude` | 同上 | python3 + sips（macOS） |
-| **DeepSeek Harness (DSH)** | 插件（`dsh-image-vision/`，推荐） | npm 一条命令 / 符号链接 + patch 条目 | 模型直接调 `vision_query` 工具；输入框 `/image-vision` | 无（纯 Node 内置模块） |
+| **DeepSeek Harness (DSH)** | 插件（`dsh-image-vision/`，推荐） | 一键脚本 / 手动 / 把仓库地址发给 DSH 自动装 | 模型直接调 `vision_query` 工具；输入框 `/image-vision` | 无（纯 Node 内置模块） |
 | **DeepSeek Harness (DSH)** | 标准 skill（轻量方案） | 一键脚本 `TARGET=dsh` | 发图提问触发技能，模型跑 python 脚本 | python3 + sips（macOS） |
 | 其他支持 SKILL.md 的宿主 | 标准 skill | 复制到对应技能目录 | 依宿主而定 | python3 |
 
@@ -30,7 +30,7 @@ image-vision/
 │   ├── lib/*.js            #   vision_query 工具 + 运行时技能注册（零依赖 ESM）
 │   ├── assets/SKILL.md     #   DSH 版技能正文（工具优先）
 │   └── README.md
-├── install.sh              # 一键安装脚本（TARGET=codex / claude / both / dsh）
+├── install.sh              # 一键安装脚本（TARGET=codex / claude / both / dsh；DSH 深度接入加 DSH_PROFILE=web）
 └── README.md
 ```
 
@@ -87,23 +87,19 @@ cp -r image-vision/skills/image-vision ~/.claude/skills/
 
 ### 3. DeepSeek Harness（DSH）
 
-DSH 提供两种接入深度：
-
-#### 深度接入：`dsh-image-vision` 插件（推荐）
-
-模型获得结构化工具 **`vision_query`**（schema 自动进 system prompt、UI 调用卡片、
-取消/超时支持），不再需要拼写命令行；同时保留技能目录条目与 GUI `/image-vision` 斜杠菜单。
-配置走 DSH 体系（环境变量 → DSH 凭据 → dotfile → 默认值）。详见
-[`dsh-image-vision/README.md`](dsh-image-vision/README.md)。
-
-本地装载（无需 npm publish）：
+**安装**（任选其一；推荐深度接入，模型可直接调用 `vision_query` 工具）：
 
 ```bash
-# 1. 让 profile 的 node_modules 能看到插件（符号链接即可，插件零运行时依赖）
-mkdir -p ~/.dsh/profiles/web/node_modules
-ln -s <本仓库>/dsh-image-vision ~/.dsh/profiles/web/node_modules/dsh-image-vision
+# 方式一：把仓库地址发给 DSH，让它自动安装
+#   "安装这个插件：https://github.com/wangyang10/image-vision
+#    （插件在 dsh-image-vision 子目录，已发布 npm，装到 web profile，装完验证可用）"
 
-# 2. 在 ~/.dsh/profiles/web/cordis.patch.yml 追加：
+# 方式二：一键脚本（自动安装插件并写入装载条目）
+TARGET=dsh DSH_PROFILE=web bash <(curl -fsSL https://raw.githubusercontent.com/wangyang10/image-vision/main/install.sh)
+
+# 方式三：手动
+dsh plugin --profile web add dsh-image-vision
+# 然后在 ~/.dsh/profiles/web/cordis.patch.yml 追加：
 # - insert:
 #     - id: image-vision
 #       name: dsh-image-vision
@@ -112,27 +108,16 @@ ln -s <本仓库>/dsh-image-vision ~/.dsh/profiles/web/node_modules/dsh-image-vi
 #         maxBytes: 10485760
 ```
 
-已发布到 npm：[`dsh-image-vision`](https://www.npmjs.com/package/dsh-image-vision)
-（`npm i dsh-image-vision` / `dsh plugin --profile web add dsh-image-vision`），
-安装后在 profile 的 `cordis.patch.yml` 追加同样的 insert 装载条目即可。
-注意**不要**加入 `dsh.profile.bundles`：bundles 层要求包声明 `dsh.bundle.patch`，本包没有。
-
-重启 `dsh web` 后生效（profile patch 层热加载依赖 HMR，web profile 默认禁用）。
-
 **使用**：直接发图提问（模型自动调 `vision_query`）；或在聊天输入框输入 `/image-vision` 唤起技能。
+装载后一般热加载生效；未生效时重启 `dsh web`。配置与详细说明见
+[`dsh-image-vision/README.md`](dsh-image-vision/README.md)。
 
-#### 轻量接入：标准 skill（无需重启）
+**轻量接入**（不想装插件时）：只装技能目录，模型通过 python 脚本识图（需 python3）：
 
 ```bash
-# 一键脚本（装到 ~/.dsh/skills，技能根目录被 DSH 监视，立即生效）
 TARGET=dsh bash <(curl -fsSL https://raw.githubusercontent.com/wangyang10/image-vision/main/install.sh)
-
-# 或手动
-cp -r image-vision/skills/image-vision ~/.dsh/skills/
+# 或手动：cp -r image-vision/skills/image-vision ~/.dsh/skills/
 ```
-
-**使用**：发图提问，模型加载技能后通过 python 脚本识图（需 python3 + sips）。
-深度接入与轻量接入同时存在时，插件注册的运行时技能优先。
 
 ### 4. 其他支持 SKILL.md 的宿主
 

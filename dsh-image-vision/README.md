@@ -45,6 +45,14 @@ ln -s <本目录> ~/.dsh/profiles/web/node_modules/dsh-image-vision
 
 已发布到 npm：[`dsh-image-vision`](https://www.npmjs.com/package/dsh-image-vision)（`npm i dsh-image-vision`）。
 
+一键脚本（自动安装并写入装载条目）：
+
+```bash
+TARGET=dsh DSH_PROFILE=web bash <(curl -fsSL https://raw.githubusercontent.com/wangyang10/image-vision/main/install.sh)
+```
+
+手动步骤：
+
 ```bash
 # 1. 安装到目标 profile（web 示例）：
 dsh plugin --profile web add dsh-image-vision    # 转发给 pnpm 安装依赖
