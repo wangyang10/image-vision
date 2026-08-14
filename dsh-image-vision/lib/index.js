@@ -65,39 +65,45 @@ export async function apply(ctx, config = {}) {
     description:
       "Analyze one or more images with an external vision model API: describe content, answer questions about it, or extract text (OCR). Use when the current model cannot see images (e.g. DeepSeek text-only models) but the task needs image content.",
     parameters: {
-      images: {
-        type: "array",
-        required: true,
-        minItems: 1,
-        items: {
-          type: "string",
-          description: "Local file path, http(s) URL, or data URL of one image.",
+      // Model function-calling APIs require an object-rooted JSON Schema;
+      // a bare property map is rejected by the provider on every request.
+      type: "object",
+      additionalProperties: false,
+      required: ["images"],
+      properties: {
+        images: {
+          type: "array",
+          minItems: 1,
+          items: {
+            type: "string",
+            description: "Local file path, http(s) URL, or data URL of one image.",
+          },
+          description: "One or more images to analyze together.",
         },
-        description: "One or more images to analyze together.",
-      },
-      prompt: {
-        type: "string",
-        description: `Question or instruction for the vision model. Defaults to: ${DEFAULT_PROMPT}`,
-      },
-      json: {
-        type: "boolean",
-        description: "Ask the vision model to answer with valid JSON only.",
-      },
-      max_tokens: {
-        type: "integer",
-        description: `Maximum output tokens. Defaults to ${DEFAULT_MAX_TOKENS}.`,
-      },
-      temperature: {
-        type: "number",
-        description: `Sampling temperature. Defaults to ${DEFAULT_TEMPERATURE}.`,
-      },
-      model: {
-        type: "string",
-        description: `Override the configured vision model (default ${DEFAULT_MODEL}).`,
-      },
-      base_url: {
-        type: "string",
-        description: `Override the configured OpenAI-compatible API base URL (default ${DEFAULT_BASE}).`,
+        prompt: {
+          type: "string",
+          description: `Question or instruction for the vision model. Defaults to: ${DEFAULT_PROMPT}`,
+        },
+        json: {
+          type: "boolean",
+          description: "Ask the vision model to answer with valid JSON only.",
+        },
+        max_tokens: {
+          type: "integer",
+          description: `Maximum output tokens. Defaults to ${DEFAULT_MAX_TOKENS}.`,
+        },
+        temperature: {
+          type: "number",
+          description: `Sampling temperature. Defaults to ${DEFAULT_TEMPERATURE}.`,
+        },
+        model: {
+          type: "string",
+          description: `Override the configured vision model (default ${DEFAULT_MODEL}).`,
+        },
+        base_url: {
+          type: "string",
+          description: `Override the configured OpenAI-compatible API base URL (default ${DEFAULT_BASE}).`,
+        },
       },
     },
     output: {
