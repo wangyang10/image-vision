@@ -24,12 +24,12 @@ function parseFrontmatter(raw) {
   };
 }
 
-/** @returns {{ name, description, content }} for ctx.skills.register(...). */
+/** @returns {{ name, description, source, content }} for ctx.skills.register(...). */
 export function loadSkillDefinition() {
   const raw = readFileSync(SKILL_PATH, "utf8");
   const { name, description, body } = parseFrontmatter(raw);
   if (!name || !description) {
     throw new Error(`dsh-image-vision: assets/SKILL.md is missing name or description frontmatter`);
   }
-  return { name, description, content: body };
+  return { name, description, source: SKILL_PATH, content: body };
 }
