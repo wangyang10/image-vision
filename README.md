@@ -45,14 +45,19 @@ DSH 深度接入与技能版共享同一套配置语义与预处理策略：`lib
 
 **安装**（任选其一）：
 
+**方式一：把技能地址发给 Codex，让它自动安装** —— 复制下面这句发给 Codex：
+
+> 请安装这个技能：https://github.com/wangyang10/image-vision/tree/main/skills/image-vision
+
+**方式二：一键脚本**
+
 ```bash
-# 方式一：把技能地址发给 Codex，让它自动安装
-#   "请安装这个技能：https://github.com/wangyang10/image-vision/tree/main/skills/image-vision"
-
-# 方式二：一键脚本
 TARGET=codex bash <(curl -fsSL https://raw.githubusercontent.com/wangyang10/image-vision/main/install.sh)
+```
 
-# 方式三：手动
+**方式三：手动**
+
+```bash
 git clone https://github.com/wangyang10/image-vision.git
 cp -r image-vision/skills/image-vision ~/.codex/skills/
 ```
@@ -69,16 +74,21 @@ python3 ~/.codex/skills/image-vision/scripts/vision_query.py 截图.png --prompt
 
 ### 2. Claude Code
 
-**安装**：
+**安装**（任选其一）：
+
+**方式一：把仓库地址发给 Claude Code** —— 复制下面这句发给 Claude Code：
+
+> 从 https://github.com/wangyang10/image-vision 安装 image-vision 技能到 ~/.claude/skills/ 目录
+
+**方式二：一键脚本**
 
 ```bash
-# 方式一：把仓库地址发给 Claude Code
-#   "从 https://github.com/wangyang10/image-vision 安装 image-vision 技能到 ~/.claude/skills/ 目录"
-
-# 方式二：一键脚本
 TARGET=claude bash <(curl -fsSL https://raw.githubusercontent.com/wangyang10/image-vision/main/install.sh)
+```
 
-# 方式三：手动
+**方式三：手动**
+
+```bash
 cp -r image-vision/skills/image-vision ~/.claude/skills/
 ```
 
@@ -89,15 +99,19 @@ cp -r image-vision/skills/image-vision ~/.claude/skills/
 
 **安装**（任选其一；推荐深度接入，模型可直接调用 `vision_query` 工具）：
 
+**方式一：把仓库地址发给 DSH，让它自动安装** —— 复制下面这句发给 DSH：
+
+> 安装这个插件：https://github.com/wangyang10/image-vision （插件在 dsh-image-vision 子目录，已发布 npm，装到 web profile，装完验证可用）
+
+**方式二：一键脚本**（自动安装插件并写入装载条目）
+
 ```bash
-# 方式一：把仓库地址发给 DSH，让它自动安装
-#   "安装这个插件：https://github.com/wangyang10/image-vision
-#    （插件在 dsh-image-vision 子目录，已发布 npm，装到 web profile，装完验证可用）"
-
-# 方式二：一键脚本（自动安装插件并写入装载条目）
 TARGET=dsh DSH_PROFILE=web bash <(curl -fsSL https://raw.githubusercontent.com/wangyang10/image-vision/main/install.sh)
+```
 
-# 方式三：手动
+**方式三：手动**
+
+```bash
 dsh plugin --profile web add dsh-image-vision
 # 然后在 ~/.dsh/profiles/web/cordis.patch.yml 追加：
 # - insert:
