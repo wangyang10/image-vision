@@ -114,7 +114,8 @@ ln -s <本仓库>/dsh-image-vision ~/.dsh/profiles/web/node_modules/dsh-image-vi
 
 已发布到 npm：[`dsh-image-vision`](https://www.npmjs.com/package/dsh-image-vision)
 （`npm i dsh-image-vision` / `dsh plugin --profile web add dsh-image-vision`），
-也可在任意 profile 的 `package.json` 声明依赖并加入 `dsh.profile.bundles`。
+安装后在 profile 的 `cordis.patch.yml` 追加同样的 insert 装载条目即可。
+注意**不要**加入 `dsh.profile.bundles`：bundles 层要求包声明 `dsh.bundle.patch`，本包没有。
 
 重启 `dsh web` 后生效（profile patch 层热加载依赖 HMR，web profile 默认禁用）。
 

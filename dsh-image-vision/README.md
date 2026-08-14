@@ -39,18 +39,28 @@ ln -s <本目录> ~/.dsh/profiles/web/node_modules/dsh-image-vision
 #         maxBytes: 10485760
 ```
 
-配置文件热加载，装载后无需重启（loader 监听 patch 层）。
+配置文件热加载，装载后无需重启（loader 监听 patch 层；若你的版本未热加载，重启 `dsh web` 即可）。
 
 ## 发布安装（任意 profile）
 
 已发布到 npm：[`dsh-image-vision`](https://www.npmjs.com/package/dsh-image-vision)（`npm i dsh-image-vision`）。
 
 ```bash
-# 安装到目标 profile（web 示例）：
+# 1. 安装到目标 profile（web 示例）：
 dsh plugin --profile web add dsh-image-vision    # 转发给 pnpm 安装依赖
-# 并把 "dsh-image-vision" 加入该 profile package.json 的 dsh.profile.bundles：
-#   "dsh": { "profile": { "bundles": ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "dsh-image-vision"] } }
+
+# 2. 把装载条目加入该 profile 的 cordis.patch.yml（与本地装载相同）：
+# - insert:
+#     - id: image-vision
+#       name: dsh-image-vision
+#       config:
+#         maxEdge: 2048
+#         maxBytes: 10485760
 ```
+
+> ⚠️ 不要把它加进 `dsh.profile.bundles`：bundles 层要求包在 package.json 中声明
+> `dsh.bundle.patch`，本包没有该字段，加入后会在启动时 fail loud。
+> `insert` 条目对 npm 安装和符号链接两种方式都适用。
 
 ## 配置优先级（每次调用实时读取）
 
@@ -68,7 +78,7 @@ VISION_MODEL=qwen/qwen3-vl-32b-instruct
 
 > ⚠️ 配置文件含密钥，权限 600，勿提交到仓库。DeepSeek 官方 API 不支持图片输入。
 
-## 插件配置项（cordis.patch.yml / bundles 的 config）
+## 插件配置项（cordis.patch.yml insert 条目的 config）
 
 | 字段 | 默认 | 含义 |
 |---|---|---|
